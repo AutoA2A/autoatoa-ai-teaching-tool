@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>错题解析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #2f6fed;
+            color: white;
+            padding: 16px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #2f6fed;
+            padding: 16px 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 8px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #1a53d8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .content {
+            background-color: white;
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 16px;
+            min-height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav li {
+                margin: 4px 0;
+            }
+        }
+    </style>
+<meta name="description" content="系统自动生成错题及解析，教师可编辑"><meta name="keywords" content="AI教学,随堂答题,知识点卡片,趣味课堂,错题解析,数据统计"><meta name="robots" content="index,follow,max-image-preview:large"><meta property="og:type" content="website"><meta property="og:title" content="错题解析"><meta property="og:description" content="系统自动生成错题及解析，教师可编辑"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="错题解析"><meta name="twitter:description" content="系统自动生成错题及解析，教师可编辑"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"错题解析","description":"系统自动生成错题及解析，教师可编辑","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script><style data-a2a="basecss">*,*::before,*::after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0}img,canvas,svg,video,table{max-width:100%;height:auto}pre,code{white-space:pre-wrap;word-break:break-word}[data-a2a="header"]{width:100%}@media(max-width:640px){body{font-size:15px}}</style></head>
+<body>
+    <header>
+        <h1>AI教学互动工具</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="create.html">创建课堂</a></li>
+            <li><a href="quiz.html">随堂答题</a></li>
+            <li><a href="cards.html">知识点卡片</a></li>
+            <li><a href="games.html">趣味小游戏</a></li>
+            <li><a href="mistakes.html">错题解析</a></li>
+            <li><a href="stats.html">数据统计</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="content">
+            
+<section class="section">
+    <h2 style="margin-bottom: 16px; color: #2f6fed;">错题解析</h2>
+    <div class="section-content">
+        <div id="mistake-list"></div>
+        <button class="btn" style="background-color: #2f6fed; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: background-color: 0.3s;" id="add-mistake">手动添加错题</button>
+        <a href="stats.html" style="margin-left: 16px; color: #2f6fed; text-decoration: none;">返回数据统计</a>
+    </div>
+</section>
+
+<script>
+(() => {
+    const storageKey = 'mistakesData';
+    const defaultData = [];
+
+    function loadData() {
+        const raw = localStorage.getItem(storageKey);
+        return raw ? JSON.parse(raw) : defaultData;
+    }
+
+    function saveData(data) {
+        localStorage.setItem(storageKey, JSON.stringify(data));
+    }
+
+    function renderList() {
+        const data = loadData();
+        const container = document.getElementById('mistake-list');
+        container.innerHTML = '';
+        if (data.length === 0) {
+            container.innerHTML = '<div class="empty" style="text-align:center;padding:32px 0;"><p>暂无错题，系统将在学生答题后自动生成。</p></div>';
+            return;
+        }
+        data.forEach((item, idx) => {
+            const card = document.createElement('article');
+            card.className = 'card';
+            card.style.backgroundColor = 'white';
+            card.style.borderRadius = '4px';
+            card.style.padding = '16px';
+            card.style.marginBottom = '16px';
+            card.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+            card.innerHTML = `
+                <h3>题目 ${idx + 1}</h3>
+                <p><strong>问题:</strong> ${item.question}</p>
+                <p><strong>正确答案:</strong> ${item.correctAnswer}</p>
+                <p><strong>解析:</strong> ${item.analysis}</p>
+                <button class="btn" data-index="${idx}" style="background-color: #ff4d4f; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-top: 8px;">删除</button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function addMistake() {
+        const question = prompt('请输入题目内容:');
+        if (!question) return;
+
+        const correctAnswer = prompt('请输入正确答案:');
+        if (!correctAnswer) return;
+
+        const analysis = prompt('请输入解析内容:');
+        if (!analysis) return;
+
+        const data = loadData();
+        data.push({ question, correctAnswer, analysis });
+        saveData(data);
+        renderList();
+    }
+
+    function deleteMistake(index) {
+        const data = loadData();
+        data.splice(index, 1);
+        saveData(data);
+        renderList();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderList();
+
+        document.getElementById('add-mistake').addEventListener('click', addMistake);
+
+        document.getElementById('mistake-list').addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn') && e.target.dataset.index) {
+                deleteMistake(parseInt(e.target.dataset.index));
+            }
+        });
+    });
+})();
+</script>
+
+        </div>
+    </div>
+<footer data-a2a="footer" style="margin-top:48px;padding:28px 16px;border-top:1px solid rgba(127,127,127,.16);text-align:center;font-family:system-ui,-apple-system,'PingFang SC',sans-serif;line-height:1.9;color:#8a8f99;background:transparent"><a href="https://www.autoa2a.org" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:10px"><img src="https://agent.oagi.com.cn/uploads/202606/29ea3ed5413830b3.png" alt="AutoA2A" style="height:36px;vertical-align:middle;border:0"></a><div style="font-size:13.5px;color:#6b7280;max-width:760px;margin:0 auto 6px">✅️ <b>AutoA2A</b> · 智能体互连 Agent to Agent 平台——让智能体无缝发现、协商、协作与安全交换数据，开启 AI 即服务新时代。</div><div style="font-size:13px">本网站由 <a href="https://www.autoa2a.org" target="_blank" rel="noopener" style="color:#f2603c;text-decoration:none;font-weight:600">www.autoa2a.org</a> 多个 AI 协作生成</div><div style="font-size:12px;color:#aab;margin-top:6px">Copyright © 2025 - 2026 AutoA2A. All Rights Reserved. A2A版权所有</div></footer></body>
+</html>
