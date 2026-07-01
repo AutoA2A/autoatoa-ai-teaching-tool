@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>趣味小游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #2f6fed;
+            color: white;
+            padding: 16px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #2f6fed;
+            padding: 16px 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 8px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #1a53d8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .content {
+            background-color: white;
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 16px;
+            min-height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav li {
+                margin: 4px 0;
+            }
+        }
+    </style>
+<meta name="description" content="教师选择游戏类型，学生参与，系统记录得分"><meta name="keywords" content="AI教学,随堂答题,知识点卡片,趣味课堂,错题解析,数据统计"><meta name="robots" content="index,follow,max-image-preview:large"><meta property="og:type" content="website"><meta property="og:title" content="趣味小游戏"><meta property="og:description" content="教师选择游戏类型，学生参与，系统记录得分"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="趣味小游戏"><meta name="twitter:description" content="教师选择游戏类型，学生参与，系统记录得分"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"趣味小游戏","description":"教师选择游戏类型，学生参与，系统记录得分","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script><style data-a2a="basecss">*,*::before,*::after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0}img,canvas,svg,video,table{max-width:100%;height:auto}pre,code{white-space:pre-wrap;word-break:break-word}[data-a2a="header"]{width:100%}@media(max-width:640px){body{font-size:15px}}</style></head>
+<body>
+    <header>
+        <h1>AI教学互动工具</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="create.html">创建课堂</a></li>
+            <li><a href="quiz.html">随堂答题</a></li>
+            <li><a href="cards.html">知识点卡片</a></li>
+            <li><a href="games.html">趣味小游戏</a></li>
+            <li><a href="mistakes.html">错题解析</a></li>
+            <li><a href="stats.html">数据统计</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="content">
+            
+<section class="section"><h2 style="margin-bottom:16px;color:#2f6fed;">趣味小游戏</h2><div class="section-content">
+<article class="card" style="background-color: white; border-radius: 4px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><h3>选择游戏类型</h3><select id="gameSelect" style="width:100%;padding:8px;margin-top:8px;"><option value="">--请选择游戏--</option><option value="reaction">反应速度游戏</option><option value="memory">记忆序列游戏</option></select></article>
+<article class="card" style="background-color: white; border-radius: 4px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><h3>玩家设置</h3><label>玩家人数（1-4）： <input type="number" id="playerCount" min="1" max="4" value="1" style="width:60px;"></label><br><br><div id="playerNamesContainer"></div><br><button id="startBtn" class="btn" style="background-color:#2f6fed;color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;margin-top:12px;">开始游戏</button></article>
+<article class="card" style="background-color: white; border-radius: 4px; padding: 16px; margin-bottom 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" id="gameCard" style="display:none;"><h3 id="gameTitle">游戏进行中</h3><div id="gameContainer"></div></article>
+<article class="card" style="background-color: white; border-radius: 4px; padding: 16px; margin-bottom 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" id="scoreCard" style="display:none;"><h3>得分榜</h3><div id="scoreboard"></div></article>
+</div></section>
+<script>
+document.getElementById('playerCount').addEventListener('change', function(){
+    const cnt = parseInt(this.value);
+    const container = document.getElementById('playerNamesContainer');
+    container.innerHTML = '';
+    for(let i=0;i<cnt;i++){
+        const label = document.createElement('label');
+        label.textContent = `玩家${i+1}姓名：`;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = `playerName${i}`;
+        input.placeholder = `玩家${i+1}`;
+        input.style.marginLeft = '8px';
+        input.style.width = '120px';
+        container.appendChild(label);
+        container.appendChild(input);
+        container.appendChild(document.createElement('br'));
+        container.appendChild(document.createElement('br'));
+    }
+});
+document.getElementById('startBtn').addEventListener('click', startGame);
+function startGame(){
+    const gameType = document.getElementById('gameSelect').value;
+    if(!gameType){alert('请先选择游戏类型');return;}
+    const playerCount = parseInt(document.getElementById('playerCount').value);
+    const names = [];
+    for(let i=0;i<playerCount;i++){
+        const val = document.getElementById(`playerName${i}`).value.trim();
+        names.push(val?val:`玩家${i+1}`);
+    }
+    // hide setup, show game
+    document.querySelectorAll('.card').forEach(c=>c.style.display='none');
+    document.getElementById('gameCard').style.display='block';
+    document.getElementById('scoreCard').style.display='block';
+    if(gameType==='reaction'){
+        initReactionGame(names);
+    }else{
+        initMemoryGame(names);
+    }
+}
+let scores = [];
+let currentPlayer = 0;
+let round = 0;
+const maxRounds = 5;
+function initReactionGame(names){
+    scores = Array(names.length).fill(0);
+    round = 0;
+    currentPlayer = 0;
+    document.getElementById('gameTitle').textContent = `反应速度游戏 - ${names[currentPlayer]} 的第 ${round+1}/${maxRounds} 轮`;
+    const container = document.getElementById('gameContainer');
+    container.innerHTML = '<canvas id="reactionCanvas" width="300" height="300" style="border:1px solid #ccc;background:#fafafa;"></canvas><div id="reactionMsg" style="margin-top:12px;text-align:center;font-size:16px;"></div>';
+    const canvas = document.getElementById('reactionCanvas');
+    const ctx = canvas.getContext('2d');
+    let waiting = false;
+    let startTime = 0;
+    function drawWaiting(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = '#666';
+        ctx.font = '16px Microsoft YaHei';
+        ctx.textAlign = 'center';
+        ctx.fillText('准备好...点击开始', canvas.width/2, canvas.height/2);
+    }
+    function drawCircle(x,y){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = 'rgba(47,111,237,0.7)';
+        ctx.beginPath();
+        ctx.arc(x,y,30,0,Math.PI*2);
+        ctx.fill();
+    }
+    function startRound(){
+        waiting = true;
+        drawWaiting();
+        document.getElementById('reactionMsg').textContent = '等待圆形出现...';
+        const delay = 2000 + Math.random()*3000;
+        setTimeout(()=>{
+            if(!waiting) return;
+            const x = 50 + Math.random()*(canvas.width-100);
+            const y = 50 + Math.random()*(canvas.height-100);
+            drawCircle(x,y);
+            startTime = Date.now();
+            document.getElementById('reactionMsg').textContent = '点击圆心！';
+        },delay);
+    }
+    canvas.addEventListener('click', function(e){
+        if(!waiting) return;
+        const rect = canvas.getBoundingClientRect();
+        const cx = e.clientX - rect.left;
+        const cy = e.clientY - rect.top;
+        const reaction = Date.now() - startTime;
+        const score = Math.max(0,1000-reaction);
+        scores[currentPlayer] += score;
+        waiting = false;
+        document.getElementById('reactionMsg').textContent = `反应时间：${reaction}ms，得分：${score}`;
+        round++;
+        if(round < maxRounds){
+            setTimeout(()=>{
+                round++;
+                document.getElementById('gameTitle').textContent = `反应速度游戏 - ${names[currentPlayer]} 的第 ${round+1}/${maxRounds} 轮`;
+                startRound();
+            },1500);
+        }else{
+            // move to next player
+            currentPlayer++;
+            round = 0;
+            if(currentPlayer >= names.length){
+                showScoreboard(names);
+            }else{
+                document.getElementById('gameTitle').textContent = `反应速度游戏 - ${names[currentPlayer]} 的第 ${round+1}/${maxRounds} 轮`;
+                setTimeout(startRound,1000);
+            }
+        }
+    });
+    startRound();
+}
+function initMemoryGame(names){
+    scores = Array(names.length).fill(0);
+    currentPlayer = 0;
+    document.getElementById('gameTitle').textContent = `记忆序列游戏 - ${names[currentPlayer]} 的回合`;
+    const container = document.getElementById('gameContainer');
+    container.innerHTML = '<div id="msg" style="margin-bottom:12px;text-align:center;font-size:16px;"></div><div id="buttons" style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;"></div>';
+    const msg = document.getElementById('msg');
+    const buttonsDiv = document.getElementById('buttons');
+    const colors = ['red','green','blue','yellow'];
+    const btns = {};
+    colors.forEach(c=>{
+        const btn = document.createElement('div');
+        btn.style.width = '60px';
+        btn.style.height = '60px';
+        btn.style.backgroundColor = c;
+        btn.style.borderRadius = '4px';
+        btn.style.cursor = 'pointer';
+        btn.dataset.color = c;
+        btn.addEventListener('click',()=>handleColorClick(c));
+        buttonsDiv));
+    btns
+    let btns('div');
+btn.style.width = '60px';
+btn.style.height = '60px';
+btn.style.backgroundColor = c;
+btn.style.borderRadius = '4px';
+btn.style.cursor = 'pointer';
+btn.dataset.color = c;
+btn.addEventListener('click',()=>handleColorClick(c));
+buttonsDiv.appendChild(btn);
+btns[c]=btn;
+});
+let sequence = [];
+let userSeq = [];
+let level = 0;
+let waitingForInput = false;
+function showSequence(){
+    userSeq = [];
+    level++;
+    msg.textContent = `记住序列（长度 ${level}）`;
+    sequence = [];
+    for(let i=0;i<level;i++){
+        sequence.push(colors[Math.floor(Math.random()*colors.length)]);
+    }
+    let delay = 500;
+    sequence.forEach((col,idx)=>{
+        setTimeout(()=>{
+            flash(btns[col]);
+        },delay);
+        delay+=800;
+    });
+    setTimeout(()=>{
+        msg.textContent = '请按顺序点击颜色';
+        waitingForInput = true;
+    },delay);
+}
+function flash(el){
+    const orig = el.style.backgroundColor;
+    el.style.backgroundColor = 'white';
+    setTimeout(()=>{el.style.backgroundColor = orig;},200);
+}
+function handleColorClick(col){
+    if(!waitingForInput) return;
+    userSeq.push(col);
+    flash(btns[col]);
+    if(userSeq[userSeq.length-1]!==sequence[userSeq.length-1]){
+        // mistake
+        waitingForInput = false;
+        scores[currentPlayer] = userSeq.length-1; // score = correct count before mistake
+        msg.textContent = `错误！得分：${scores[currentPlayer]}`;
+        setTimeout(nextPlayer,1500);
+        return;
+    }
+    if(userSeq.length===sequence.length){
+        // correct round
+        waitingForInput = false;
+        msg.textContent = `正确！得分：${userSeq.length}`;
+        setTimeout(()=>{
+            showSequence();
+        },1000);
+    }
+}
+function nextPlayer(){
+    currentPlayer++;
+    if(currentPlayer>=names.length){
+        showScoreboard(names);
+    }else{
+        level = 0;
+        sequence = [];
+        userSeq = [];
+        document.getElementById('gameTitle').textContent = `记忆序列游戏 - ${names[currentPlayer]} 的回合`;
+        msg.textContent = '准备好...';
+        setTimeout(showSequence,1000);
+    }
+}
+function showScoreboard(names){
+    document.getElementById('gameCard').style.display='none';
+    const board = document.getElementById('scoreboard');
+    board.innerHTML = '<table class="table" style="width:100%;border-collapse:collapse;"><thead><tr style="background-color:#2f6fed;color:white;"><th style="padding:8px;text-align:left;">玩家</th><th style="padding:8px;text-align:left;">得分</th></tr></thead><tbody></tbody></table>';
+    const tbody = board.querySelector('tbody');
+    names.forEach((name,i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="padding:8px;border-bottom:1px solid #eee;">${name}</td><td style="padding:8px;border-bottom:1px solid #eee;">${scores[i]}</td>`;
+        tbody.appendChild(tr);
+    });
+}
+</script>
+
+        </div>
+    </div>
+<footer data-a2a="footer" style="margin-top:48px;padding:28px 16px;border-top:1px solid rgba(127,127,127,.16);text-align:center;font-family:system-ui,-apple-system,'PingFang SC',sans-serif;line-height:1.9;color:#8a8f99;background:transparent"><a href="https://www.autoa2a.org" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:10px"><img src="https://agent.oagi.com.cn/uploads/202606/29ea3ed5413830b3.png" alt="AutoA2A" style="height:36px;vertical-align:middle;border:0"></a><div style="font-size:13.5px;color:#6b7280;max-width:760px;margin:0 auto 6px">✅️ <b>AutoA2A</b> · 智能体互连 Agent to Agent 平台——让智能体无缝发现、协商、协作与安全交换数据，开启 AI 即服务新时代。</div><div style="font-size:13px">本网站由 <a href="https://www.autoa2a.org" target="_blank" rel="noopener" style="color:#f2603c;text-decoration:none;font-weight:600">www.autoa2a.org</a> 多个 AI 协作生成</div><div style="font-size:12px;color:#aab;margin-top:6px">Copyright © 2025 - 2026 AutoA2A. All Rights Reserved. A2A版权所有</div></footer></body>
+</html>
