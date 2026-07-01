@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI教学互动工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #2f6fed;
+            color: white;
+            padding: 16px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #2f6fed;
+            padding: 16px 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 8px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #1a53d8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .content {
+            background-color: white;
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 16px;
+            min-height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav li {
+                margin: 4px 0;
+            }
+        }
+    </style>
+<meta name="description" content="介绍工具功能，提供创建新课堂或加入现有课堂的选项"><meta name="keywords" content="AI教学,随堂答题,知识点卡片,趣味课堂,错题解析,数据统计"><meta name="robots" content="index,follow,max-image-preview:large"><meta property="og:type" content="website"><meta property="og:title" content="AI教学互动工具"><meta property="og:description" content="介绍工具功能，提供创建新课堂或加入现有课堂的选项"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="AI教学互动工具"><meta name="twitter:description" content="介绍工具功能，提供创建新课堂或加入现有课堂的选项"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"AI教学互动工具","description":"介绍工具功能，提供创建新课堂或加入现有课堂的选项","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script><style data-a2a="basecss">*,*::before,*::after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0}img,canvas,svg,video,table{max-width:100%;height:auto}pre,code{white-space:pre-wrap;word-break:break-word}[data-a2a="header"]{width:100%}@media(max-width:640px){body{font-size:15px}}</style></head>
+<body>
+    <header>
+        <h1>AI教学互动工具</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="create.html">创建课堂</a></li>
+            <li><a href="quiz.html">随堂答题</a></li>
+            <li><a href="cards.html">知识点卡片</a></li>
+            <li><a href="games.html">趣味小游戏</a></li>
+            <li><a href="mistakes.html">错题解析</a></li>
+            <li><a href="stats.html">数据统计</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="content">
+            
+<div class="section">
+    <h2 style="margin-bottom: 16px; color: #2f6fed;">AI教学互动工具</h2>
+    <div class="section-content">
+        <p>欢迎使用AI教学互动工具！我们的平台提供多种互动教学功能，帮助教师和学生更高效地进行教学活动。</p>
+        <div class="grid" style="margin-top: 24px;">
+            <div class="grid-item">
+                <h3>创建新课堂</h3>
+                <p>创建一个新的课堂，设置课堂名称和教师信息，生成唯一的课堂ID。</p>
+                <a href="create.html" class="btn">创建课堂</a>
+            </div>
+            <div class="grid-item">
+                <h3>加入现有课堂</h3>
+                <p>输入课堂ID加入现有课堂，参与教师发起的互动活动。</p>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label for="classId" style="display: block; margin-bottom: 8px;">课堂ID</label>
+                    <input type="text" id="classId" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <button class="btn" style="margin-top: 16px;" onclick="joinClass()">加入课堂</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function joinClass() {
+        const classId = document.getElementById('classId').value;
+        if (classId) {
+            // 这里可以添加加入课堂的逻辑
+            window.location.href = `create.html?id=${classId}`;
+        } else {
+            alert('请输入课堂ID');
+        }
+    }
+</script>
+
+<style>
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .btn {
+        background-color: #2f6fed;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #1a53d8;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 16px;
+    }
+
+    .grid-item {
+        background-color: white;
+        border-radius: 4px;
+        padding: 16px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+</style>
+
+        </div>
+    </div>
+<footer data-a2a="footer" style="margin-top:48px;padding:28px 16px;border-top:1px solid rgba(127,127,127,.16);text-align:center;font-family:system-ui,-apple-system,'PingFang SC',sans-serif;line-height:1.9;color:#8a8f99;background:transparent"><a href="https://www.autoa2a.org" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:10px"><img src="https://agent.oagi.com.cn/uploads/202606/29ea3ed5413830b3.png" alt="AutoA2A" style="height:36px;vertical-align:middle;border:0"></a><div style="font-size:13.5px;color:#6b7280;max-width:760px;margin:0 auto 6px">✅️ <b>AutoA2A</b> · 智能体互连 Agent to Agent 平台——让智能体无缝发现、协商、协作与安全交换数据，开启 AI 即服务新时代。</div><div style="font-size:13px">本网站由 <a href="https://www.autoa2a.org" target="_blank" rel="noopener" style="color:#f2603c;text-decoration:none;font-weight:600">www.autoa2a.org</a> 多个 AI 协作生成</div><div style="font-size:12px;color:#aab;margin-top:6px">Copyright © 2025 - 2026 AutoA2A. All Rights Reserved. A2A版权所有</div></footer></body>
+</html>
