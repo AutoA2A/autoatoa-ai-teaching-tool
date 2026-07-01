@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据统计</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #2f6fed;
+            color: white;
+            padding: 16px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #2f6fed;
+            padding: 16px 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 8px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #1a53d8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .content {
+            background-color: white;
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 16px;
+            min-height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav li {
+                margin: 4px 0;
+            }
+        }
+    </style>
+<meta name="description" content="实时显示答题正确率、游戏得分等"><meta name="keywords" content="AI教学,随堂答题,知识点卡片,趣味课堂,错题解析,数据统计"><meta name="robots" content="index,follow,max-image-preview:large"><meta property="og:type" content="website"><meta property="og:title" content="数据统计"><meta property="og:description" content="实时显示答题正确率、游戏得分等"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="数据统计"><meta name="twitter:description" content="实时显示答题正确率、游戏得分等"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"数据统计","description":"实时显示答题正确率、游戏得分等","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script><style data-a2a="basecss">*,*::before,*::after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0}img,canvas,svg,video,table{max-width:100%;height:auto}pre,code{white-space:pre-wrap;word-break:break-word}[data-a2a="header"]{width:100%}@media(max-width:640px){body{font-size:15px}}</style></head>
+<body>
+    <header>
+        <h1>AI教学互动工具</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="create.html">创建课堂</a></li>
+            <li><a href="quiz.html">随堂答题</a></li>
+            <li><a href="cards.html">知识点卡片</a></li>
+            <li><a href="games.html">趣味小游戏</a></li>
+            <li><a href="mistakes.html">错题解析</a></li>
+            <li><a href="stats.html">数据统计</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="content">
+            
+<section class="section">
+  <h2 style="margin-bottom:16px; color:#2f6fed;">数据统计</h2>
+  <div class="section-content">
+    <div id="metricsGrid" class="grid">
+      <div class="grid-item" style="background-color: white; border-radius: 4px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">栅格项1</div>
+      <div class="grid-item" style="background-color: white; border-radius: 4px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">栅格项2</div>
+      <div class="grid-item" style="background-color: white; border-radius: 4px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">栅格项3</div>
+    </div>
+    <div style="margin-top:16px;">
+      <a href="quiz.html" class="btn">前往随堂答题</a>
+      <a href="cards.html" class="btn">前往知识点卡片</a>
+      <a href="games.html" class="btn">前往趣味小游戏</a>
+    </div>
+    <script>
+      function refreshStats(){
+        const correctRate = parseFloat(localStorage.getItem('quizCorrectRate'))||0;
+        const totalQuestions = parseInt(localStorage.getItem('quizTotal'))||0;
+        const avgGameScore = parseInt(localStorage.getItem('gameScore'))||0;
+        const gamesPlayed = parseInt(localStorage.getItem('gamePlayed'))||0;
+        const items = document.getElementById('metricsGrid').getElementsByClassName('grid-item');
+        if(items.length>=3){
+          items[0].innerHTML = `<article class="card" style="background-color: white; border-radius: 4px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><h3>答题正确率</h3><p>${correctRate.toFixed(1)}%</p></article>`;
+          items[1].innerHTML = `<article class="card" style="background-color: white; border-radius: 4px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><h3>总答题数</h3><p>${totalQuestions}</p></article>`;
+          items[2].innerHTML = `<article class="card" style="background-color: white; border-radius: 4px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><h3>游戏平均得分</h3><p>${avgGameScore}</p></article>`;
+        }
+      }
+      refreshStats();
+      setInterval(refreshStats, 3000);
+    </script>
+  </div>
+</section>
+
+        </div>
+    </div>
+<footer data-a2a="footer" style="margin-top:48px;padding:28px 16px;border-top:1px solid rgba(127,127,127,.16);text-align:center;font-family:system-ui,-apple-system,'PingFang SC',sans-serif;line-height:1.9;color:#8a8f99;background:transparent"><a href="https://www.autoa2a.org" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:10px"><img src="https://agent.oagi.com.cn/uploads/202606/29ea3ed5413830b3.png" alt="AutoA2A" style="height:36px;vertical-align:middle;border:0"></a><div style="font-size:13.5px;color:#6b7280;max-width:760px;margin:0 auto 6px">✅️ <b>AutoA2A</b> · 智能体互连 Agent to Agent 平台——让智能体无缝发现、协商、协作与安全交换数据，开启 AI 即服务新时代。</div><div style="font-size:13px">本网站由 <a href="https://www.autoa2a.org" target="_blank" rel="noopener" style="color:#f2603c;text-decoration:none;font-weight:600">www.autoa2a.org</a> 多个 AI 协作生成</div><div style="font-size:12px;color:#aab;margin-top:6px">Copyright © 2025 - 2026 AutoA2A. All Rights Reserved. A2A版权所有</div></footer></body>
+</html>
