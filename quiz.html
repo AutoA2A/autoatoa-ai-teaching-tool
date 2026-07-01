@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随堂答题</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #2f6fed;
+            color: white;
+            padding: 16px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #2f6fed;
+            padding: 16px 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 8px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #1a53d8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .content {
+            background-color: white;
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 16px;
+            min-height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav li {
+                margin: 4px 0;
+            }
+        }
+    </style>
+<meta name="description" content="教师上传题目，学生实时答题，系统自动统计正确率"><meta name="keywords" content="AI教学,随堂答题,知识点卡片,趣味课堂,错题解析,数据统计"><meta name="robots" content="index,follow,max-image-preview:large"><meta property="og:type" content="website"><meta property="og:title" content="随堂答题"><meta property="og:description" content="教师上传题目，学生实时答题，系统自动统计正确率"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="随堂答题"><meta name="twitter:description" content="教师上传题目，学生实时答题，系统自动统计正确率"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"随堂答题","description":"教师上传题目，学生实时答题，系统自动统计正确率","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script><style data-a2a="basecss">*,*::before,*::after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0}img,canvas,svg,video,table{max-width:100%;height:auto}pre,code{white-space:pre-wrap;word-break:break-word}[data-a2a="header"]{width:100%}@media(max-width:640px){body{font-size:15px}}</style></head>
+<body>
+    <header>
+        <h1>AI教学互动工具</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="create.html">创建课堂</a></li>
+            <li><a href="quiz.html">随堂答题</a></li>
+            <li><a href="cards.html">知识点卡片</a></li>
+            <li><a href="games.html">趣味小游戏</a></li>
+            <li><a href="mistakes.html">错题解析</a></li>
+            <li><a href="stats.html">数据统计</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="content">
+            
+<section class="section">
+    <h2 style="margin-bottom: 16px; color: #2f6fed;">随堂答题</h2>
+    <div class="section-content">
+        <div id="role-select" style="margin-bottom: 16px;">
+            <button class="btn" onclick="setRole('teacher')">教师模式</button>
+            <button class="btn" style="margin-left: 8px;" onclick="setRole('student')">学生模式</button>
+        </div>
+
+        <!-- 教师面板 -->
+        <div id="teacher-panel" style="display:none;">
+            <h3>上传题目</h3>
+            <div style="margin-bottom: 8px;">
+                <input type="text" id="q-text" placeholder="题目内容" style="width:100%; padding:8px; margin-bottom:4px;">
+                <input type="text" id="q-opt1" placeholder="选项 A" style="width:48%; padding:8px; margin-right:4%;">
+                <input type="text" id="q-opt2" placeholder="选项 B" style="width:48%; padding:8px;">
+                <input type="text" id="q-opt3" placeholder="选项 C" style="width:48%; padding:8px; margin-right:4%; margin-top:4px;">
+                <input type="text" id="q-opt4" placeholder="选项 D" style="width:48%; padding:8px; margin-top:4px;">
+                <select id="q-answer" style="width:100%; padding:8px; margin-top:4px;">
+                    <option value="">正确答案（请选择）</option>
+                    <option value="0">A</option>
+                    <option value="1">B</option>
+                    <option value="2">C</option>
+                    <option value="3">D</option>
+                </select>
+                <button class="btn" style="margin-top:8px;" onclick="addQuestion()">添加题目</button>
+            </div>
+            <h4>已上传题目</h4>
+            <ul id="question-list" class="list"></ul>
+        </div>
+
+        <!-- 学生面板 -->
+        <div id="student-panel" style="display:none;">
+            <h3 id="student-q-text">题目加载中…</h3>
+            <div id="student-options"></div>
+            <button class="btn" id="submit-btn" style="margin-top:8px;" onclick="submitAnswer()">提交答案</button>
+            <p id="feedback" style="margin-top:8px;"></p>
+            <p style="margin-top:8px;">正确率：<span id="accuracy">0%</span></p>
+            <div style="margin-top:16px;">
+                <a href="mistakes.html?id=student" class="btn" style="background-color:#ff9800;">查看错题</a>
+                <a href="stats.html?id=student" class="btn" style="background-color:#4caf50; margin-left:8px;">查看统计</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+/* 数据结构 */
+const questions = [] ;          // 所有题目
+const answers = [];            // 学生提交记录 {qid, chosen, correct}
+
+/* 角色切换 */
+function setRole(role){
+    document.getElementById('teacher-panel').style.display = role==='teacher' ? 'block' : 'none';
+    document.getElementById('student-panel').style.display = role==='student' ? 'block' : 'none';
+    if(role==='student') loadNextQuestion();
+}
+
+/* 教师：添加题目 */
+function addQuestion(){
+    const text = document.getElementById('q-text').value.trim();
+    const opts = [
+        document.getElementById('q-opt1').value.trim(),
+        document.getElementById('q-opt2').value.trim(),
+        document.getElementById('q-opt3').value.trim(),
+        document.getElementById('q-opt4').value.trim()
+    ];
+    const ans = document.getElementById('q-answer').value;
+    if(!text||opts.some(o=>!o)||ans===''){
+        alert('请完整填写题目和选项');
+        return;
+    }
+    const q = {id:Date.now(), text, opts, ans:parseInt(ans,10)};
+    questions.push(q);
+    renderQuestionList();
+    // 清空表单
+    document.getElementById('q-text').value='';
+    document.getElementById('q-opt1').value='';
+    document.getElementById('q-opt2').value='';
+    document.getElementById('q-opt3').value='';
+    document.getElementById('q-opt4').value='';
+    document.getElementById('q-answer').value='';
+}
+
+/* 教师：渲染已上传题目列表 */
+function renderQuestionList(){
+    const ul = document.getElementById('question-list');
+    ul.innerHTML='';
+    questions.forEach(q=>{
+        const li = document.createElement('li');
+        li.style.padding='8px 0';
+        li.style.borderBottom='1px solid #eee';
+        li.textContent = q.text + ' (A:' + q.opts[0] + ', B:' + q.opts[1] + ', C:' + q.opts[2] + ', D:' + q.opts[3] + ')';
+        ul.appendChild(li);
+    });
+}
+
+/* 学生：加载下一题 */
+let currentQ = null;
+function loadNextQuestion(){
+    if(questions.length===0){
+        document.getElementById('student-q-text').textContent='暂无题目，请联系教师';
+        document.getElementById('student-options').innerHTML='';
+        return;
+    }
+    // 随机抽题
+    currentQ = questions[Math.floor(Math.random()*questions.length)];
+    document.getElementById('student-q-text').textContent = currentQ.text;
+    const optDiv = document.getElementById('student-options');
+    optDiv.innerHTML='';
+    currentQ.opts.forEach((opt,i)=>{
+        const label = document.createElement('label');
+        label.style.display='block';
+        label.style.marginBottom='4px';
+        const radio = document.createElement('input');
+        radio.type='radio';
+        radio.name='option';
+        radio.value=i;
+        radio.style.marginRight='8px';
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(opt));
+        optDiv.appendChild(label);
+    });
+    document.getElementById('feedback').textContent='';
+}
+
+/* 学生：提交答案 */
+function submitAnswer(){
+    const radios = document.getElementsByName('option');
+    let chosen = null;
+    for(const r of radios){
+        if(r.checked){ chosen = parseInt(r.value,10); break; }
+    }
+    if(chosen===null){
+        alert('请选择一个答案');
+        return;
+    }
+    const correct = chosen===currentQ.ans;
+    answers.push({qid:currentQ.id, chosen, correct});
+    document.getElementById('feedback').textContent = correct ? '回答正确！' : '回答错误，正确答案是：' + currentQ.opts[currentQ.ans];
+    updateAccuracy();
+    setTimeout(loadNextQuestion,1500);
+}
+
+/* 统计正确率 */
+function updateAccuracy(){
+    const total = answers.length;
+    const right = answers.filter(a=>a.correct).length;
+    const perc = total===0 ? 0 : Math.round(right/total*100);
+    document.getElementById('accuracy').textContent = perc + '%';
+}
+
+/* 初始化默认角色 */
+setRole('teacher');
+</script>
+
+        </div>
+    </div>
+<footer data-a2a="footer" style="margin-top:48px;padding:28px 16px;border-top:1px solid rgba(127,127,127,.16);text-align:center;font-family:system-ui,-apple-system,'PingFang SC',sans-serif;line-height:1.9;color:#8a8f99;background:transparent"><a href="https://www.autoa2a.org" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:10px"><img src="https://agent.oagi.com.cn/uploads/202606/29ea3ed5413830b3.png" alt="AutoA2A" style="height:36px;vertical-align:middle;border:0"></a><div style="font-size:13.5px;color:#6b7280;max-width:760px;margin:0 auto 6px">✅️ <b>AutoA2A</b> · 智能体互连 Agent to Agent 平台——让智能体无缝发现、协商、协作与安全交换数据，开启 AI 即服务新时代。</div><div style="font-size:13px">本网站由 <a href="https://www.autoa2a.org" target="_blank" rel="noopener" style="color:#f2603c;text-decoration:none;font-weight:600">www.autoa2a.org</a> 多个 AI 协作生成</div><div style="font-size:12px;color:#aab;margin-top:6px">Copyright © 2025 - 2026 AutoA2A. All Rights Reserved. A2A版权所有</div></footer></body>
+</html>
